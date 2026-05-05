@@ -8,11 +8,11 @@
 
 .login {
   display: flex;
-  height: 100vh;
+  min-height: 100vh; /* Cambiamos 'height' por 'min-height' para que pueda crecer */
   width: 100%;
   background: #ffffff; 
   font-family: 'DM Sans', sans-serif;
-  overflow: hidden;
+ 
 }
 /* ──────────────────────────────────────
    LEFT PANEL — hero image
@@ -286,11 +286,12 @@
 }
 
 /* ──────────────────────────────────────
-   RESPONSIVE
+   RESPONSIVE (CELULARES Y TABLETS)
    ────────────────────────────────────── */
 @media (max-width: 820px) {
   .login {
     flex-direction: column;
+    height: auto; /* Obligamos a que la página crezca si el formulario es largo */
   }
 
   .login-hero {
@@ -320,10 +321,13 @@
   .login-panel {
     flex: 1;
     padding: 32px 28px 40px;
+    height: auto; /* El panel derecho ahora crecerá hacia abajo si se necesita */
+    justify-content: flex-start; /* Evita que los elementos se aplasten en el centro */
   }
 
   .login-panel-logo {
     display: block;
+    margin-top: 10px;
   }
 }
 

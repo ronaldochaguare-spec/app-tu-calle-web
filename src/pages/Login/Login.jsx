@@ -89,15 +89,6 @@ const Login = () => {
           </div>
         )}
 
-        <div className="login-panel-logo">
-          Tu<span>Calle</span>
-        </div>
-
-
-        <div className="login-panel-logo">
-          Tu<span>Calle</span>
-        </div>
-
         <div className="login-form">
           
           {/* VISTA 1 */}
