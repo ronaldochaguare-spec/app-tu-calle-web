@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.login {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #ffffff; 
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+}
+/* ──────────────────────────────────────
+   LEFT PANEL — hero image
+   ────────────────────────────────────── */
+.login-hero {
+  flex: 0 0 45%; 
+  position: relative;
+  overflow: hidden;
+}
+.login-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55) saturate(1.1);
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
+
+.login-hero:hover .login-hero-img {
+  transform: scale(1.0);
+}
+
+.login-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.15) 0%,
+    rgba(0,0,0,0.65) 100%
+  );
+}
+
+.login-hero-content {
+  position: absolute;
+  bottom: 60px;
+  left: 48px;
+  right: 10%;
+}
+
+.login-hero-content h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+.login-hero-content h2 em {
+  font-style: italic;
+  color: #e8331a;
+}
+
+.login-hero-content p {
+  font-family: 'Poppins', sans-serif; /* Agregado para que también sea Poppins */
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.72);
+  letter-spacing: 0.5px;
+}
+
+.login-logo-hero {
+  position: absolute;
+  top: 36px;
+  left: 48px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.login-logo-hero span {
+  color: #e8331a;
+}
+
+/* ──────────────────────────────────────
+   RIGHT PANEL — form
+   ────────────────────────────────────── */
+.login-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  background: #ffffff; 
+  position: relative;
+  z-index: 1;
+}
+.login-panel-logo {
+  display: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+
+.login-panel-logo span {
+  color: #e8331a;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px; 
+}
+.login-form h1 {
+  font-family: 'Poppins', sans-serif; 
+  font-size: 28px;
+  font-weight: 700;
+  color: #111111; 
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+  text-align: center;
+}
+.login-form .subtitle {
+  font-size: 14px;
+  color: #666666; 
+  margin-bottom: 36px;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+/* Divider */
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0; 
+}
+
+.login-divider span {
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+
+/* Email input */
+.login-form input[type='email'] {
+  width: 100%;
+  height: 56px;
+  background: #f7f7f7; 
+  color: #111111; 
+  border: 1px solid #e0e0e0; 
+  outline: none;
+  border-radius: 10px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 16px;
+}
+
+.login-form input[type='email']:focus {
+  border-color: #e8331a;
+  background: #ffffff;
+}
+
+.login-form input[type='email']::placeholder {
+  color: #999999;
+  font-size: 15px;
+}
+/* Primary email button */
+.btn-email {
+  width: 100%;
+  height: 48px; 
+  border: none;
+  outline: none;
+  border-radius: 50px; 
+  background: #db2c2c; 
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-email:hover {
+  background: #c62a14;
+  transform: translateY(-1px);
+}
+
+.btn-email:active {
+  transform: translateY(0);
+}
+
+/* Google button */
+.btn-google {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #eaeaea; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03); 
+  outline: none;
+  border-radius: 50px; 
+  background: #ffffff;
+  color: #db2c2c; 
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.btn-google:hover {
+  background: #f9f9f9;
+  border-color: #c0c0c0;
+  transform: translateY(-1px);
+}
+
+.btn-google:active {
+  transform: translateY(0);
+}
+
+.btn-google svg,
+.btn-email svg {
+  flex-shrink: 0;
+}
+
+
+.login-terms {
+  margin-top: 28px;
+  font-size: 12px;
+  color: #777777; 
+  line-height: 1.6;
+  text-align: center;
+}
+.login-terms a {
+  color: #111111; 
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Spinner */
+.login-spinner {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+}
+
+.login-spinner img {
+  width: 60px;
+}
+
+/* ──────────────────────────────────────
+   RESPONSIVE
+   ────────────────────────────────────── */
+@media (max-width: 820px) {
+  .login {
+    flex-direction: column;
+  }
+
+  .login-hero {
+    flex: 0 0 240px;
+    height: 240px;
+  }
+
+  .login-hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      #0a0a0a 100%
+    );
+  }
+
+  .login-hero-content {
+    bottom: 28px;
+    left: 28px;
+    right: 28px;
+  }
+
+  .login-logo-hero {
+    top: 24px;
+    left: 28px;
+  }
+
+  .login-panel {
+    flex: 1;
+    padding: 32px 28px 40px;
+  }
+
+  .login-panel-logo {
+    display: block;
+  }
+}
+
+/* ──────────────────────────────────────
+   NUEVOS ESTILOS DEL FORMULARIO DE EMAIL
+   ────────────────────────────────────── */
+.email-login-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-back {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #111;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.btn-back:hover {
+  transform: translateX(-3px); 
+}
+
+.left-title {
+  text-align: left !important;
+  font-family: 'Poppins', sans-serif !important; 
+  font-size: 26px !important;
+  margin-bottom: 24px !important;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.input-group label span {
+  color: #db2c2c; 
+}
+
+.input-group input {
+  height: 46px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 0 14px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  background: #ffffff;
+  color: #111;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #db2c2c;
+}
+
+.forgot-password {
+  font-size: 12px;
+  color: #555;
+  text-decoration: underline;
+  text-align: left;
+  margin-bottom: 28px;
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.btn-ingresar {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 50px;
+  background: #db2c2c;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-ingresar:hover {
+  background: #c22121;
+}
+
+.btn-registrarse {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #db2c2c;
+  border-radius: 50px;
+  background: transparent;
+  color: #db2c2c;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-registrarse:hover {
+  background: #fff0f0;
+}
+
+/* ──────────────────────────────────────
+   OVERLAY DE CARGA (SPINNER GIF)
+   ────────────────────────────────────── */
+.login-spinner-overlay {
+  position: absolute;
+  inset: 0; 
+  background: rgba(255, 255, 255, 0.7); 
+  backdrop-filter: blur(4px); 
+  z-index: 1000; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-spinner-overlay img {
+  width: 60px; 
+  height: auto;
+}

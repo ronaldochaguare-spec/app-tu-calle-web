@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #0a0a0a;
+  overflow: hidden;
+  display: block !important; /* Esto anula el flex centrado que Vite le pone al #root */
+  max-width: none !important;
+}
