@@ -1,16 +1,10 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* Limpieza de los estilos por defecto de Vite */
 html, body, #root {
-  width: 100vw;
-  height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: #0a0a0a;
-  overflow: hidden;
-  display: block !important; /* Esto anula el flex centrado que Vite le pone al #root */
-  max-width: none !important;
+  width: 100%;
+  min-height: 100vh;
+  /* 🔥 Esta es la regla mágica que fuerza al navegador a permitir el pull-to-refresh 🔥 */
+  overscroll-behavior-y: auto;
+  overflow-x: hidden;
 }
