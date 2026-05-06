@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './Login.css'
 import fondoImg from '../../assets/fondoLogin.webp'
 import { toast } from 'react-toastify'
-import { login, loginWithGoogle } from '../../firebase'
+import { login, loginWithGoogle, signup } from '../../firebase'
 import loginSpinner from '../../assets/spinner.gif'
 
 
@@ -29,12 +29,31 @@ const BackArrowIcon = () => (
   </svg>
 )
 
+const MapPinIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#db2c2c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <circle cx="12" cy="10" r="3"></circle>
+  </svg>
+)
+
+
 const Login = () => {
   const [view, setView] = useState('options') 
   
+  // ESTADOS GENERALES
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // ESTADOS PARA USUARIO
+  const [userName, setUserName] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+
+  // ESTADOS PARA TIENDA
+  const [storeName, setStoreName] = useState('')
+  const [storePhone, setStorePhone] = useState('')
+  const [storeAddress, setStoreAddress] = useState('')
+  const [storeHours, setStoreHours] = useState('')
 
   const handleIngresar = async (e) => {
     e.preventDefault()
@@ -57,7 +76,39 @@ const Login = () => {
     setLoading(false)
   }
 
-  
+  // 👇 Función para registrar un USUARIO normal
+  const handleRegisterUser = async (e) => {
+    e.preventDefault()
+    
+    // Validación básica
+    if (!userName || !email || !password || !userPhone) {
+      toast.error("Por favor, llena todos los campos obligatorios")
+      return
+    }
+
+    setLoading(true)
+    // Usamos la función signup de tu firebase.js
+    // Nota: Tu función signup actual solo guarda (name, email, password)
+    // Si quieres guardar el teléfono, tendrías que actualizar firebase.js más adelante.
+    await signup(userName, email, password)
+    setLoading(false)
+  }
+
+  // 👇 Función para registrar una TIENDA
+  const handleRegisterStore = async (e) => {
+    e.preventDefault()
+    
+    // Validación básica
+    if (!storeName || !email || !password || !storePhone || !storeAddress || !storeHours) {
+      toast.error("Por favor, llena todos los campos de la tienda")
+      return
+    }
+
+    setLoading(true)
+    // Aquí usamos el nombre de la tienda como "name" para la cuenta
+    await signup(storeName, email, password)
+    setLoading(false)
+  }
 
   return (
     <div className="login">
@@ -150,8 +201,155 @@ const Login = () => {
                 <span style={{textTransform: 'none'}}>¿No tienes una cuenta?</span>
               </div>
 
-              <button className="btn-registrarse">
+              <button className="btn-registrarse" onClick={() => setView('registerOptions')}>
                 Registrarse
+              </button>
+            </div>
+          )}
+
+          {/* VISTA 3: OPCIONES DE REGISTRO */}
+          {view === 'registerOptions' && (
+            <div className="register-options-container">
+              
+              <button className="btn-back" onClick={() => setView('emailForm')}>
+                <BackArrowIcon />
+              </button>
+
+              <div className="register-content">
+                <h1 className="register-title">Queremos<br />conocerte 👇</h1>
+
+                <button className="btn-role" onClick={() => setView('registerUser')}>
+                  Soy Usuario
+                </button>
+                <button className="btn-role" onClick={() => setView('registerStore')}>
+                  Soy Tienda
+                </button>
+              </div>
+
+              <a className="admin-link">Soy socio administrativo</a>
+              
+            </div>
+          )}
+
+         {/* VISTA 4: REGISTRO USUARIO */}
+          {view === 'registerUser' && (
+            <div className="email-login-container">
+              {/* ... (código del botón de regresar y título) ... */}
+
+              <button className="btn-back" onClick={() => setView('registerOptions')}>
+                <BackArrowIcon />
+              </button>
+
+              <h1 className="left-title">Regístrate</h1>
+              
+              <div className="input-group">
+                <label>Nombres y Apellidos<span>*</span></label>
+                <input 
+                  type="text" 
+                  value={userName} 
+                  onChange={(e) => setUserName(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Email<span>*</span></label>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Contraseña<span>*</span></label>
+                <input 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Celular<span>*</span></label>
+                <input 
+                  type="tel" 
+                  value={userPhone} 
+                  onChange={(e) => setUserPhone(e.target.value)} 
+                />
+              </div>
+
+              {/* ... (código de los checkboxes) ... */}
+
+              {/* Conectamos la función al botón 👇 */}
+              <button className="btn-ingresar" onClick={handleRegisterUser}>
+                REGISTRARSE
+              </button>
+            </div>
+          )}
+
+         {/* VISTA 5: REGISTRO TIENDA */}
+          {view === 'registerStore' && (
+            <div className="email-login-container">
+              {/* ... (código del botón de regresar y título) ... */}
+              <button className="btn-back" onClick={() => setView('registerOptions')}>
+                <BackArrowIcon />
+              </button>
+
+              <h1 className="left-title">Regístrate</h1>
+              <div className="input-group">
+                <label>Nombre del local<span>*</span></label>
+                <input 
+                  type="text" 
+                  value={storeName} 
+                  onChange={(e) => setStoreName(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Email<span>*</span></label>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Contraseña<span>*</span></label>
+                <input 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Número de contacto<span>*</span></label>
+                <input 
+                  type="tel" 
+                  value={storePhone} 
+                  onChange={(e) => setStorePhone(e.target.value)} 
+                />
+              </div>
+              <div className="input-group">
+                <label>Dirección<span>*</span></label>
+                <div className="input-with-icon">
+                  <input 
+                    type="text" 
+                    value={storeAddress} 
+                    onChange={(e) => setStoreAddress(e.target.value)} 
+                  />
+                  <MapPinIcon />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Horario de atención<span>*</span></label>
+                <input 
+                  type="text" 
+                  value={storeHours} 
+                  onChange={(e) => setStoreHours(e.target.value)} 
+                />
+              </div>
+
+              {/* ... (código de los checkboxes) ... */}
+
+              {/* Conectamos la función al botón 👇 */}
+              <button className="btn-ingresar" onClick={handleRegisterStore}>
+                REGISTRARSE
               </button>
             </div>
           )}
