@@ -8,7 +8,7 @@
 
 .login {
   display: flex;
-  min-height: 100vh; /* Cambiamos 'height' por 'min-height' para que pueda crecer */
+  min-height: 100vh; 
   width: 100%;
   background: #ffffff; 
   font-family: 'DM Sans', sans-serif;
@@ -68,7 +68,7 @@
 }
 
 .login-hero-content p {
-  font-family: 'Poppins', sans-serif; /* Agregado para que también sea Poppins */
+  font-family: 'Poppins', sans-serif; 
   margin-top: 14px;
   font-size: 16px;
   font-weight: 300;
@@ -477,7 +477,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 420px; /* Le da espacio suficiente para empujar el enlace hacia abajo */
+  min-height: 420px; 
 }
 
 .register-content {
@@ -491,7 +491,7 @@
 .register-title {
   font-family: 'Poppins', sans-serif !important;
   font-size: 38px !important;
-  font-weight: 900; /* Extra negrita como en tu diseño */
+  font-weight: 900; 
   color: #111111;
   line-height: 1.1;
   margin-bottom: 36px;
@@ -526,7 +526,7 @@
   text-align: center;
   text-decoration: underline;
   cursor: pointer;
-  margin-top: auto; /* Esto empuja el texto al final del contenedor */
+  margin-top: auto; 
   padding-bottom: 10px;
 }
 
@@ -550,7 +550,7 @@
 .checkbox-group input[type="checkbox"] {
   width: 14px;
   height: 14px;
-  accent-color: #db2c2c; /* Pinta el check de color rojo */
+  accent-color: #db2c2c; 
   cursor: pointer;
   margin: 0;
 }
@@ -572,7 +572,7 @@
 
 .input-with-icon input {
   width: 100%;
-  padding-right: 40px; /* Deja espacio para que el texto no pise el ícono */
+  padding-right: 40px; 
 }
 
 .input-with-icon svg {

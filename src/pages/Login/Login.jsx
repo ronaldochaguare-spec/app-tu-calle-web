@@ -230,7 +230,7 @@ const Login = () => {
          {/* VISTA 4: REGISTRO USUARIO */}
           {view === 'registerUser' && (
             <div className="email-login-container">
-              {/* ... (código del botón de regresar y título) ... */}
+             
 
               <button className="btn-back" onClick={() => setView('registerOptions')}>
                 <BackArrowIcon />
@@ -271,9 +271,9 @@ const Login = () => {
                 />
               </div>
 
-              {/* ... (código de los checkboxes) ... */}
+             
 
-              {/* Conectamos la función al botón 👇 */}
+             
               <button className="btn-ingresar" onClick={handleRegisterUser}>
                 REGISTRARSE
               </button>
@@ -283,7 +283,7 @@ const Login = () => {
          {/* VISTA 5: REGISTRO TIENDA */}
           {view === 'registerStore' && (
             <div className="email-login-container">
-              {/* ... (código del botón de regresar y título) ... */}
+              
               <button className="btn-back" onClick={() => setView('registerOptions')}>
                 <BackArrowIcon />
               </button>
@@ -341,9 +341,9 @@ const Login = () => {
                 />
               </div>
 
-              {/* ... (código de los checkboxes) ... */}
+              
 
-              {/* Conectamos la función al botón 👇 */}
+              
               <button className="btn-ingresar" onClick={handleRegisterStore}>
                 REGISTRARSE
               </button>

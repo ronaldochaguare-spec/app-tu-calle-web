@@ -12,7 +12,7 @@ const UserIcon = () => (
 const Home = () => {
   const user = auth.currentUser;
   
-  // 👇 Nuevo estado para saber si la foto de Google falló
+  
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -26,11 +26,11 @@ const Home = () => {
                 src={user.photoURL} 
                 alt="Perfil" 
                 className="avatar-img" 
-                referrerPolicy="no-referrer" /* 🔥 La magia para que Google no bloquee la imagen */
-                onError={() => setImageError(true)} /* Si se rompe, activamos el Plan B */
+                referrerPolicy="no-referrer" 
+                onError={() => setImageError(true)} 
               />
             ) : (
-              <UserIcon /> /* Nuestro Plan B: el icono del humano */
+              <UserIcon /> 
             )}
           </div>
           <span className="user-greeting">Hola, {user?.displayName || 'Ronaldo'}</span>

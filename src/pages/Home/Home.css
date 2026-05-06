@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 2px solid #db2c2c; /* Borde rojo para resaltar */
+  border: 2px solid #db2c2c; 
 }
 
 .avatar-img {
@@ -57,7 +57,7 @@
   font-size: 32px;
   font-weight: 800;
   color: #111;
-  text-transform: lowercase; /* Para el estilo "home - proximamente" */
+  text-transform: lowercase; 
 }
 
 .home-main p {
