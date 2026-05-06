@@ -87,9 +87,6 @@ const Login = () => {
     }
 
     setLoading(true)
-    // Usamos la función signup de tu firebase.js
-    // Nota: Tu función signup actual solo guarda (name, email, password)
-    // Si quieres guardar el teléfono, tendrías que actualizar firebase.js más adelante.
     await signup(userName, email, password)
     setLoading(false)
   }
@@ -105,7 +102,6 @@ const Login = () => {
     }
 
     setLoading(true)
-    // Aquí usamos el nombre de la tienda como "name" para la cuenta
     await signup(storeName, email, password)
     setLoading(false)
   }
@@ -241,7 +237,7 @@ const Login = () => {
               </button>
 
               <h1 className="left-title">Regístrate</h1>
-              
+
               <div className="input-group">
                 <label>Nombres y Apellidos<span>*</span></label>
                 <input 
