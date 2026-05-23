@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase'; 
 import { doc, getDoc } from 'firebase/firestore'; 
 import './Navbar.css';
-
+import { useNavigate } from 'react-router-dom';
 
 const DefaultIllustratedAvatar = ({ size = 24, color = "#a0c4ff" }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
