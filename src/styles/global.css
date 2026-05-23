@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap');
+
+:root {
+  --color-primary: #db2c2c;
+  --color-primary-hover: #c22121;
+  --color-dark: #111111;
+  --color-muted: #666666;
+  --color-bg-light: #f7f7f7;
+  --color-border: #e0e0e0;
+  
+  /* 👇 Todo unificado a Poppins 👇 */
+  --font-body: 'Poppins', sans-serif;
+  --font-title: 'Poppins', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 👇 Esto asegura que TODO herede Poppins si no se especifica otra cosa */
+body {
+  font-family: var(--font-body);
+}
+
+/* Spinner global que tenías al final */
+.global-spinner-overlay {
+  position: absolute;
+  inset: 0; 
+  background: rgba(255, 255, 255, 0.7); 
+  backdrop-filter: blur(4px); 
+  z-index: 1000; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^12.12.1",
+    "firebase": "^12.13.0",
+    "leaflet": "^1.9.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.14.2",
     "react-toastify": "^11.1.0"
   },

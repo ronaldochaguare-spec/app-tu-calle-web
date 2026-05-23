@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.footer {
+  background-color: #ffffff;
+  border-top: 1px solid #eaeaea;
+  padding: 40px 24px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Cabecera del footer con Logo y Redes */
+.footer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: -0.5px;
+}
+
+.footer-logo span {
+  color: #db2c2c; /* Tu color rojo característico */
+}
+
+/* Íconos de redes sociales */
+.footer-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.social-icon {
+  color: #666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon:hover {
+  color: #db2c2c;
+  transform: translateY(-3px); /* Pequeño salto al pasar el mouse */
+}
+
+/* Grilla de enlaces */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+
+.footer-links li:hover {
+  color: #db2c2c;
+  text-decoration: underline;
+}
+
+/* Texto de copyright */
+.copyright-text {
+  color: #9ca3af;
+  font-size: 13px;
+  border-top: 1px solid #eaeaea;
+  padding-top: 20px;
+  margin: 0;
+}
+
+/* =========================================================
+   REGLAS RESPONSIVAS
+========================================================= */
+@media (max-width: 768px) {
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets/móviles */
+    gap: 12px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .footer-links {
+    grid-template-columns: 1fr; /* 1 sola columna en pantallas muy pequeñas */
+  }
+  
+  .copyright-text {
+    text-align: center;
+  }
+  
+  .footer-icons {
+    margin-top: 10px;
+  }
+}

@@ -1,0 +1,187 @@
+.store-list-section {
+  padding: 0 24px 40px 24px;
+  font-family: 'Poppins', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Cabecera con controles */
+.store-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Centrado para alinear con las flechas */
+  margin-bottom: 20px;
+}
+
+.store-list-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.store-carousel-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.control-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #eaeaea;
+  background-color: #ffffff;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.control-btn:hover {
+  background-color: #f9f9f9;
+  border-color: #d1d5db;
+  transform: scale(1.05);
+}
+
+/* Pista del carrusel horizontal */
+.store-carousel-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 16px; /* Espacio para no cortar la sombra de las tarjetas */
+  
+  /* Ocultar scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.store-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Diseño de la Tarjeta */
+.store-card {
+  flex: 0 0 300px; /* 👇 ESTO ES CLAVE: Fuerza a la tarjeta a medir exactamente 300px de ancho y evita que se encoja */
+  scroll-snap-align: start;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #eaeaea;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.store-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+/* ==== El interior de la tarjeta se mantiene igual ==== */
+
+.store-image-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+.store-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heart-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.heart-btn:hover {
+  transform: scale(1.1);
+}
+
+.store-info {
+  /* Reducimos el padding vertical (arriba y abajo) de 16px a 12px para acortar la tarjeta */
+  padding: 12px 16px; 
+}
+
+.store-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.store-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-rating {
+  font-size: 18px;
+  font-weight: 700;
+  color: #9ca3af; 
+}
+
+.store-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* Reducimos el margen inferior antes de las etiquetas */
+  margin-bottom: 8px; 
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Etiquetas rojas (Pills) */
+.store-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* Menos espacio entre etiqueta y etiqueta */
+}
+
+.store-tag {
+  background-color: #db2c2c;
+  color: #ffffff;
+  /* 👇 Letra más pequeña */
+  font-size: 10px; 
+  font-weight: 600;
+  /* 👇 Menos relleno (2px arriba/abajo y 8px a los lados) para hacerlas más delgadas */
+  padding: 3px 8px; 
+  /* Ajustamos el borde redondeado al nuevo tamaño */
+  border-radius: 12px; 
+}
+
+.loading-stores {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}

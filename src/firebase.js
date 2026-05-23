@@ -1,63 +1,148 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, addDoc, collection } from "firebase/firestore/lite";
-import { toast } from "react-toastify";
-
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup,
+  signOut,
+  sendPasswordResetEmail,
+  confirmPasswordReset
+} from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDbxxfJtvmWMyBgYAhv5vS0sX86zl0UsDk",
-  authDomain: "app-tu-calle.firebaseapp.com",
-  projectId: "app-tu-calle",
-  storageBucket: "app-tu-calle.firebasestorage.app",
-  messagingSenderId: "449657578596",
-  appId: "1:449657578596:web:15f939b9df4591072e6b71"
+  apiKey: "AIzaSyCptwUoF8PxJF5Dzn_SYQ957yhQOAzuvGQ",
+  authDomain: "apptucalle-62c65.firebaseapp.com",
+  projectId: "apptucalle-62c65",
+  storageBucket: "apptucalle-62c65.firebasestorage.app",
+  messagingSenderId: "117716463919",
+  appId: "1:117716463919:web:a88d7901895943d835b1da",
+  measurementId: "G-ED1J8ZD9HP"
 };
-
-
-
-
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
+// ─────────────────────────────────────────────────────────────────
+// FUNCIONES DE AUTENTICACIÓN Y BASE DE DATOS
+// ─────────────────────────────────────────────────────────────────
 
-const loginWithGoogle = async () => {
+// 1. Iniciar sesión con Email y Contraseña 
+export const login = async (email, password) => {
   try {
-    await signInWithPopup(auth, googleProvider);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
   } catch (error) {
-    toast.error(error.code.split('/')[1].split('-').join(" "));
+    console.error("Error en login:", error.message);
+    throw error;
   }
 };
 
-
-
-const signup = async (name, email, password) => {
+// 2. Registrar un USUARIO normal
+export const registerNormalUser = async (name, email, password, phone) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    await addDoc(collection(db, "user"), {
-      uid: res.user.uid,
-      name,
-      authProvider: "local",
-      email,
+   
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+   
+    await setDoc(doc(db, "usuarios", user.uid), {
+      uid: user.uid,
+      nombre: name,
+      email: email,
+      telefono: phone, 
+      rol: "USUARIO"
     });
+    
+    return user;
   } catch (error) {
-    toast.error(error.code.split('/')[1].split('-').join(" "));
+    console.error("Error en registro de usuario:", error.message);
+    throw error;
   }
 };
 
-const login = async (email, password) => {
+// 3. Registrar una TIENDA
+export const registerStore = async (storeName, email, password, phone, addressObj, hours, daysOpen) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    // Creamos la cuenta en Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    // Guardamos la tienda en la colección "tiendas" 
+    await setDoc(doc(db, "tiendas", user.uid), {
+      celular: phone,
+      diasApertura: daysOpen, 
+      direccion: {
+        latitud: addressObj.latitud,
+        longitud: addressObj.longitud,
+        texto: addressObj.texto
+      },
+      email: email,
+      horario: hours,
+      nombre: storeName,
+      rol: "TIENDA"
+    });
+    
+    return user;
   } catch (error) {
-    toast.error(error.code.split('/')[1].split('-').join(" "));
+    console.error("Error en registro de tienda:", error.message);
+    throw error;
   }
 };
 
-const logout = () => {
-  signOut(auth);
+// 4. Iniciar sesión con Google (Detectando si es nuevo)
+const googleProvider = new GoogleAuthProvider();
+export const loginWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    const userDocRef = doc(db, "usuarios", user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    // Si NO existe (es la primera vez que se loguea con Google)
+    if (!userDocSnap.exists()) {
+      await setDoc(userDocRef, {
+        uid: user.uid,
+        nombre: user.displayName, // Google nos da su nombre completo
+        email: user.email,
+        rol: "USUARIO" // Por defecto, quien entra con Google es un cliente normal
+      });
+    }
+    
+    return user;
+  } catch (error) {
+    console.error("Error con Google:", error.message);
+    throw error;
+  }
 };
 
+// 5. Cerrar sesión
+export const logout = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error.message);
+    throw error;
+  }
+};
 
-export { auth, db, login, signup, logout, loginWithGoogle };
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    console.error("Error al enviar correo de recuperación:", error.message);
+    throw error;
+  }
+};
+
+export const confirmNewPassword = async (oobCode, newPassword) => {
+  try {
+    await confirmPasswordReset(auth, oobCode, newPassword);
+  } catch (error) {
+    console.error("Error al confirmar nueva contraseña:", error.message);
+    throw error;
+  }
+};

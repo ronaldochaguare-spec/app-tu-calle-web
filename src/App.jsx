@@ -5,6 +5,7 @@ import Login from './pages/Login/Login'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase'
 import { ToastContainer } from 'react-toastify';
+import './styles/global.css';
 
 const App = () => {
   const navigate = useNavigate();
@@ -13,21 +14,24 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user)=>{
       if(user){
         console.log("Logged In");
-        navigate('/Home', { replace: true }) 
+        
+        if (window.location.pathname === '/') {
+          navigate('/Home', { replace: true });
+        }
       }else{
         console.log("Logged Out");
-        navigate('/', { replace: true })
+        navigate('/', { replace: true });
       }
     })
     return () => unsubscribe();
-  },[])
-
+  }, [navigate]); 
   return (
     <> 
       <ToastContainer theme='dark'/>
       <Routes>
         <Route path='/'  element={<Login/>}/>
         <Route path='/Home'  element={<Home/>}/>
+        <Route path='/perfil' element={<UserProfile/>}/> 
       </Routes>
     </>
   )
