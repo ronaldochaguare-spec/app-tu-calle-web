@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase'
 import { ToastContainer } from 'react-toastify';
 import './styles/global.css';
+import UserProfile from './components/Profile/UserProfile'
 
 const App = () => {
   const navigate = useNavigate();
