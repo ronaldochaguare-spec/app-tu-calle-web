@@ -9,22 +9,31 @@ import '../ui/Button.css';
 import '../ui/Form.css';
 import '../ui/Spinner.css';
 
-// Días de la semana según tu base de datos
 const DAYS_OF_WEEK = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+
+// 👇 Opciones estandarizadas para los selectores de tiempo
+const HOURS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+const MINUTES = ['00', '15', '30', '45'];
+const AMPM = ['AM', 'PM'];
 
 const StoreRegister = ({ setView }) => {
   const [storeName, setStoreName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [storePhone, setStorePhone] = useState('');
-  
-  // 👇 Ahora la dirección es un objeto
   const [storeAddress, setStoreAddress] = useState({ texto: '', latitud: null, longitud: null });
-  const [storeHours, setStoreHours] = useState('');
   
-  // 👇 Nuevo estado para los días de apertura
+  // 👇 Estados para los selectores de apertura
+  const [openHour, setOpenHour] = useState('08');
+  const [openMin, setOpenMin] = useState('00');
+  const [openPeriod, setOpenPeriod] = useState('AM');
+  
+  // 👇 Estados para los selectores de cierre
+  const [closeHour, setCloseHour] = useState('10');
+  const [closeMin, setCloseMin] = useState('00');
+  const [closePeriod, setClosePeriod] = useState('PM');
+  
   const [selectedDays, setSelectedDays] = useState([]);
-  
   const [loading, setLoading] = useState(false);
   const [isMapOpen, setIsMapOpen] = useState(false);
 
@@ -38,20 +47,37 @@ const StoreRegister = ({ setView }) => {
 
   const handleRegisterStore = async (e) => {
     e.preventDefault();
-    if (!storeName || !email || !password || !storePhone || !storeAddress.texto || !storeHours || selectedDays.length === 0) {
+    if (!storeName || !email || !password || !storePhone || !storeAddress.texto || selectedDays.length === 0) {
       toast.error("Por favor, llena todos los campos y selecciona al menos un día");
       return;
     }
+    
     setLoading(true);
+    
+    // 👇 Armamos el string exacto que querías: "08:00 AM - 10:00 PM"
+    const formattedStoreHours = `${openHour}:${openMin} ${openPeriod} - ${closeHour}:${closeMin} ${closePeriod}`;
+
     try {
-      // 👇 Pasamos el objeto de dirección y el array de días
-      await registerStore(storeName, email, password, storePhone, storeAddress, storeHours, selectedDays);
+      await registerStore(storeName, email, password, storePhone, storeAddress, formattedStoreHours, selectedDays);
       toast.success("¡Tienda registrada exitosamente!");
     } catch (error) {
       toast.error("Hubo un error al registrar la tienda");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Estilo reutilizable para los selectores para que combinen con tus inputs
+  const selectStyle = {
+    padding: '10px 8px',
+    borderRadius: '8px',
+    border: '1px solid #ddd',
+    background: '#f9f9f9',
+    color: '#333',
+    outline: 'none',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontFamily: 'inherit'
   };
 
   return (
@@ -96,7 +122,7 @@ const StoreRegister = ({ setView }) => {
         <div className="input-with-icon">
           <input 
             type="text" 
-            value={storeAddress.texto} // Mostramos solo el texto
+            value={storeAddress.texto} 
             onChange={(e) => setStoreAddress({...storeAddress, texto: e.target.value})} 
             placeholder="Escribe o usa el mapa 👉"
           />
@@ -106,13 +132,49 @@ const StoreRegister = ({ setView }) => {
         </div>
       </div>
 
+      {/* 👇 NUEVO DISEÑO CON SELECTORES DESPLEGABLES 👇 */}
       <div className="input-group">
-        <label>Horario de atención<span>*</span> (Ej: 08:00 AM - 10:00 PM)</label>
-        <input type="text" value={storeHours} onChange={(e) => setStoreHours(e.target.value)} />
+        <label>Horario de atención<span>*</span></label>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          
+          {/* Bloque Apertura */}
+          <div style={{ flex: 1, background: 'white', padding: '12px', borderRadius: '8px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <span style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Apertura</span>
+            <div style={{ display: 'flex', gap: '4px' }}>
+              <select style={selectStyle} value={openHour} onChange={(e) => setOpenHour(e.target.value)}>
+                {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
+              <span style={{ alignSelf: 'center', fontWeight: 'bold', color: '#666' }}>:</span>
+              <select style={selectStyle} value={openMin} onChange={(e) => setOpenMin(e.target.value)}>
+                {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+              <select style={{...selectStyle, marginLeft: '4px', background: '#fff'}} value={openPeriod} onChange={(e) => setOpenPeriod(e.target.value)}>
+                {AMPM.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Bloque Cierre */}
+          <div style={{ flex: 1, background: 'white', padding: '12px', borderRadius: '8px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <span style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Cierre</span>
+            <div style={{ display: 'flex', gap: '4px' }}>
+              <select style={selectStyle} value={closeHour} onChange={(e) => setCloseHour(e.target.value)}>
+                {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
+              <span style={{ alignSelf: 'center', fontWeight: 'bold', color: '#666' }}>:</span>
+              <select style={selectStyle} value={closeMin} onChange={(e) => setCloseMin(e.target.value)}>
+                {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+              <select style={{...selectStyle, marginLeft: '4px', background: '#fff'}} value={closePeriod} onChange={(e) => setClosePeriod(e.target.value)}>
+                {AMPM.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      {/* 👇 Selector de Días de Apertura */}
-      <div className="input-group">
+      <div className="input-group" style={{ marginBottom: '8px', marginTop: '8px' }}>
         <label>Días de atención<span>*</span></label>
         <div className="days-selector">
           {DAYS_OF_WEEK.map((day) => (
@@ -126,6 +188,16 @@ const StoreRegister = ({ setView }) => {
           ))}
         </div>
       </div>
+
+      <p style={{ 
+        fontSize: '12px', 
+        color: '#888', 
+        marginTop: '-4px', 
+        marginBottom: '24px', 
+        fontStyle: 'italic' 
+      }}>
+        Podrás editar tu horario y días de atención más adelante desde tu perfil.
+      </p>
 
       <button className="btn-ingresar" onClick={handleRegisterStore}>
         REGISTRARSE

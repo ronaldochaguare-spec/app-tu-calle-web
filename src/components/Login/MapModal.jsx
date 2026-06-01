@@ -1,107 +1,66 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import '../ui/MapModal.css';
 
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconAnchor: [12, 41]
-});
-L.Marker.prototype.options.icon = DefaultIcon;
+const libraries = ['places'];
 
-const MapUpdater = ({ center }) => {
-  const map = useMap();
-  if (center) {
-    map.flyTo([center.lat, center.lng], 16);
-  }
-  return null;
+const containerStyle = {
+  width: '100%',
+  height: '100%'
 };
 
-const LocationMarker = ({ position, setPosition, setAddressText }) => {
-  useMapEvents({
-    async click(e) {
-      const { lat, lng } = e.latlng;
-      setPosition({ lat, lng });
-      
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-        const data = await response.json();
-        setAddressText(data.display_name || "Dirección seleccionada");
-      } catch (error) {
-        console.error("Error al obtener dirección", error);
-      }
-    },
-  });
-  return position === null ? null : <Marker position={[position.lat, position.lng]}></Marker>;
-};
+const defaultCenter = { lat: -11.9799, lng: -77.0006 };
 
 const MapModal = ({ isOpen, onClose, onAddressSelected }) => {
-  const [position, setPosition] = useState({ lat: -11.9799, lng: -77.0006 });
+  const [position, setPosition] = useState(defaultCenter);
   const [addressText, setAddressText] = useState('');
-  
-  const [searchInput, setSearchInput] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [randomName, setRandomName] = useState('');
 
-  // Referencia para evitar que el autocompletado dispare una nueva búsqueda
-  const preventAutoSearch = useRef(false);
-
-  // ⏱️ EFECTO DEBOUNCE: Escucha cada vez que el usuario teclea
   useEffect(() => {
-    // Si el texto está vacío o tiene menos de 3 letras, limpiamos y no buscamos
-    if (!searchInput.trim() || searchInput.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
+    if (isOpen) {
+      setRandomName('search_' + Math.random().toString(36).substring(7));
     }
+  }, [isOpen]);
 
-    // Si el usuario acaba de hacer clic en una sugerencia, ignoramos este cambio
-    if (preventAutoSearch.current) {
-      preventAutoSearch.current = false;
-      return;
-    }
+  const autocompleteRef = useRef(null);
 
-    setIsSearching(true);
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "AIzaSyBmmXJY0q-kywBj5vg43_jdUSV7QqX0qS8", 
+    libraries: libraries
+  });
 
-    // Configuramos el temporizador de 600ms
-    const timerId = setTimeout(async () => {
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${searchInput}&limit=5&countrycodes=pe`);
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-          setSuggestions(data);
-          setShowSuggestions(true);
-        } else {
-          setSuggestions([]);
-          setShowSuggestions(false);
-        }
-      } catch (error) {
-        console.error("Error en la búsqueda", error);
-      } finally {
-        setIsSearching(false);
+  const onMapClick = useCallback((e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setPosition({ lat, lng });
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        setAddressText(results[0].formatted_address);
+      } else {
+        setAddressText("Dirección seleccionada manualmente");
       }
-    }, 600); // 👈 Espera 600 milisegundos después de la última tecla presionada
+    });
+  }, []);
 
-    // Limpieza: si el usuario sigue tecleando antes de los 600ms, cancela el temporizador anterior
-    return () => clearTimeout(timerId);
-  }, [searchInput]);
+  const onLoadAutocomplete = (autocomplete) => {
+    autocompleteRef.current = autocomplete;
+  };
 
-  // Cuando el usuario hace clic en una de las sugerencias
-  const handleSelectSuggestion = (result) => {
-    preventAutoSearch.current = true; // Avisamos al useEffect que ignore este cambio
-    
-    const newPos = { lat: parseFloat(result.lat), lng: parseFloat(result.lon) };
-    setPosition(newPos);
-    setAddressText(result.display_name);
-    setSearchInput(result.display_name.split(',')[0]); // Ponemos el nombre corto en la barra
-    
-    setShowSuggestions(false); // Ocultamos la lista
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current !== null) {
+      const place = autocompleteRef.current.getPlace();
+      
+      if (place.geometry && place.geometry.location) {
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        
+        setPosition({ lat, lng });
+        setAddressText(place.formatted_address || place.name);
+      }
+    }
   };
 
   const handleConfirm = () => {
@@ -115,68 +74,67 @@ const MapModal = ({ isOpen, onClose, onAddressSelected }) => {
   };
 
   if (!isOpen) return null;
+  if (loadError) return <div className="map-modal-overlay">Error al cargar el mapa. Verifica tu API Key.</div>;
+  if (!isLoaded) return <div className="map-modal-overlay"><div className="map-modal-content">Cargando Google Maps...</div></div>;
 
   return (
     <div className="map-modal-overlay">
       <div className="map-modal-content">
         <h3>Selecciona la ubicación</h3>
-        <p>Escribe tu calle y te sugeriremos opciones automáticamente</p>
+        <p>Busca tu local comercial o haz clic en el mapa para fijar la ubicación exacta</p>
         
-        <div className="map-container-wrapper" style={{ overflow: 'visible' }}>
+        <div className="map-container-wrapper" style={{ overflow: 'hidden', position: 'relative' }}>
           
-          <div style={{ position: 'absolute', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, width: '90%', maxWidth: '400px' }}>
-            {/* Quitamos el botón "Ir" y el formulario ya que ahora es automático */}
-            <div style={{ position: 'relative' }}>
+          {/* BUSCADOR DE GOOGLE PLACES */}
+          <div style={{ position: 'absolute', top: '16px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: '90%', maxWidth: '400px' }}>
+            <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
               <input
                 type="text"
+                name={randomName}
                 placeholder="Ej: Avenida Los Jardines..."
                 className="map-search-input"
-                style={{ position: 'static', transform: 'none', width: '100%', margin: 0 }}
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                
+                /* 📍 ESTRATEGIA AVANZADA CONTRA EL AUTOFILL 📍 */
+                autoComplete="one-time-code" 
+                readOnly
+                onFocus={(e) => e.target.removeAttribute('readonly')}
+                
+                style={{ 
+                  width: '100%', 
+                  padding: '12px 16px', 
+                  borderRadius: '8px', 
+                  border: 'none', 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  fontFamily: 'inherit'
+                }}
               />
-              {/* Pequeño indicador visual de carga dentro del input */}
-              {isSearching && (
-                <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: '#888' }}>
-                  Buscando...
-                </span>
-              )}
-            </div>
-
-            {/* MENÚ DESPLEGABLE DE SUGERENCIAS */}
-            {showSuggestions && suggestions.length > 0 && (
-              <ul style={{ 
-                listStyle: 'none', padding: 0, margin: '8px 0 0 0', 
-                background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                maxHeight: '200px', overflowY: 'auto', border: '1px solid #eee'
-              }}>
-                {suggestions.map((item, index) => (
-                  <li 
-                    key={index} 
-                    onClick={() => handleSelectSuggestion(item)}
-                    style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer', fontSize: '13px', color: '#333' }}
-                    onMouseOver={(e) => e.target.style.background = '#f9f9f9'}
-                    onMouseOut={(e) => e.target.style.background = 'white'}
-                  >
-                    {item.display_name}
-                  </li>
-                ))}
-              </ul>
-            )}
+            </Autocomplete>
           </div>
 
-          <MapContainer center={[position.lat, position.lng]} zoom={14} style={{ height: "100%", width: "100%", zIndex: 1 }}>
-            <TileLayer
-              attribution='&copy; OpenStreetMap'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <MapUpdater center={position} />
-            <LocationMarker position={position} setPosition={setPosition} setAddressText={setAddressText} />
-          </MapContainer>
+          {/* MAPA DE GOOGLE */}
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={position}
+            zoom={15}
+            onClick={onMapClick}
+            options={{
+              disableDefaultUI: true,
+              zoomControl: true,
+              streetViewControl: false
+            }}
+          >
+            <Marker position={position} />
+          </GoogleMap>
 
         </div>
 
-        {addressText && <div style={{ fontSize: '13px', color: '#666', marginBottom: '16px', background: '#f5f5f5', padding: '8px', borderRadius: '6px' }}><strong>Ubicación detectada:</strong> {addressText}</div>}
+        {addressText && (
+          <div style={{ fontSize: '13px', color: '#666', marginBottom: '16px', background: '#f5f5f5', padding: '8px', borderRadius: '6px', marginTop: '16px' }}>
+            <strong>Ubicación detectada:</strong> {addressText}
+          </div>
+        )}
 
         <div className="map-modal-actions">
           <button className="btn-cancel" onClick={onClose}>Cancelar</button>

@@ -71,15 +71,18 @@ const Navbar = ({ user, logout }) => {
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
-        </div>
+        </div>  
 
         <div className="side-menu-content">
-          <div className="menu-item active">
+          <div className="menu-item active" onClick={() => {
+              toggleMenu();
+              navigate('/Home');
+          }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            <span>Mural</span>
+            <span>Home</span>
           </div>
 
           <div className="menu-item">
